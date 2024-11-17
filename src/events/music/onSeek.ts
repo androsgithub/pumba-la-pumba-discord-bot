@@ -1,27 +1,45 @@
-import { GuildQueue } from "discord-player";
+import { GuildQueue, useQueue } from "discord-player";
 import { Message, OmitPartialGroupDMChannel } from "discord.js";
 import {
   transformMillisecondsInTimeText,
   transformTimeTextInMilliseconds,
 } from "../../utils/transform-time";
+import { embedTitleWithDescription } from "../../components/embed";
 
 export async function seek(
+  newTime: string,
   queue: GuildQueue | null,
-  message: OmitPartialGroupDMChannel<Message<boolean>>,
-  newTime: string
+  message: OmitPartialGroupDMChannel<Message<boolean>>
 ) {
-  if (!queue || !queue.currentTrack) {
+  if (message.member?.voice.channelId) {
+    if (!queue || !queue.currentTrack) {
+      await message.reply({
+        embeds: [
+          embedTitleWithDescription("Nenhuma música está tocando no momento!"),
+        ],
+      });
+      return;
+    }
+    const oldTime = queue.node.estimatedPlaybackTime;
+    queue.node.seek(transformTimeTextInMilliseconds(newTime));
     await message.reply({
-      content: "Nenhuma música está tocando no momento!",
-      options: { ephemeral: true },
+      embeds: [
+        embedTitleWithDescription(
+          `Foi de ${transformMillisecondsInTimeText(
+            oldTime
+          )} para **${transformMillisecondsInTimeText(
+            transformTimeTextInMilliseconds(newTime)
+          )}**`
+        ),
+      ],
     });
-    return;
+  } else {
+    await message.channel.send({
+      embeds: [
+        embedTitleWithDescription(
+          "Você precisa estar conectado a um canal de voz."
+        ),
+      ],
+    });
   }
-
-  const skippedTrack = queue.currentTrack;
-  const oldTime = queue.node.estimatedPlaybackTime;
-  queue.node.seek(transformTimeTextInMilliseconds(newTime));
-  await message.reply(
-    `Foi de ${transformMillisecondsInTimeText(oldTime)} para **${newTime}**`
-  );
 }
