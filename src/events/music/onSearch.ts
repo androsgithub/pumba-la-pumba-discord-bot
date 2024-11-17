@@ -1,58 +1,70 @@
-import { Player } from "discord-player";
 import {
-  ActionRowBuilder,
   ComponentType,
-  InteractionResponseType,
   Message,
   OmitPartialGroupDMChannel,
-  SelectMenuBuilder,
   StringSelectMenuBuilder,
   StringSelectMenuOptionBuilder,
 } from "discord.js";
 import { play } from "./onPlay";
+import { player } from "../..";
+import { GuildQueue } from "discord-player";
+import { embedTitleWithDescription } from "../../components/embed";
+import {
+  selectMenu,
+  selectMenuOption,
+  select,
+} from "../../components/select-menu";
 export async function search(
-  voiceChannelId: string,
-  query: string,
-  message: OmitPartialGroupDMChannel<Message<boolean>>,
-  player: Player
+  args: string[],
+  queue: GuildQueue | null,
+  message: OmitPartialGroupDMChannel<Message<boolean>>
 ) {
-  const results = await player.search(query);
+  if (message.member?.voice.channelId) {
+    const query = args
+      .slice(1, args.length)
+      .toString()
+      .replaceAll(",", " ")
+      .trim();
+    const results = await player.search(query);
 
-  const select = new StringSelectMenuBuilder()
-    .setCustomId("searchedVideos")
-    .setPlaceholder("Make a selection!")
-    .addOptions(
-      ...results.tracks
-        .map((track) =>
-          new StringSelectMenuOptionBuilder()
-            .setLabel(track.title)
-            .setDescription(track.author)
-            .setValue(track.url)
-        )
-        .slice(0, 25)
-    );
-
-  const r = await message.reply({
-    components: [
-      new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(select),
-    ],
-  });
-
-  try {
-    const interaction = await message.channel.awaitMessageComponent({
-      componentType: ComponentType.StringSelect,
-      time: 30_000,
+    const r = await message.reply({
+      components: [
+        select(
+          selectMenu(
+            "searchedVideos",
+            "Selecione um video!",
+            results.tracks.map((track) =>
+              selectMenuOption(track.title, track.author, track.url)
+            )
+          )
+        ),
+      ],
     });
 
-    await interaction.deferReply();
+    try {
+      const interaction = await message.channel.awaitMessageComponent({
+        componentType: ComponentType.StringSelect,
+        time: 30_000,
+      });
 
-    const [selectedVideo] = interaction.values;
-    await play(voiceChannelId, selectedVideo, player, message);
+      await interaction.deferReply();
 
-    //delete useless messages
-    r.delete();
-    await interaction.deleteReply();
-  } catch (e) {
-    console.error("Erro ao processar a interação:", e);
+      const [selectedVideo] = interaction.values;
+      await play(selectedVideo, queue, message);
+
+      //delete useless messages
+      r.delete();
+      await interaction.deleteReply();
+    } catch (e) {
+      console.error("Erro ao processar a interação:", e);
+    }
+  } else {
+    await message.channel.send({
+      embeds: [
+        embedTitleWithDescription(
+          "Você precisa estar conectado a um canal de voz."
+        ),
+      ],
+    });
   }
 }
