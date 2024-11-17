@@ -2,9 +2,10 @@ import { ExtendedClient } from "./structs/extended-client";
 import { YoutubeiExtractor } from "discord-player-youtubei";
 import { Player, useVolume } from "discord-player";
 import { onEvent } from "./events";
+import { symbol } from "../config.json";
+import { embedTitleWithDescription } from "./components/embed";
 
 const client = new ExtendedClient();
-const symbol = "--";
 
 client.start();
 
@@ -24,8 +25,15 @@ client.on("messageCreate", async (message) => {
 
   if (message.content.startsWith(symbol)) {
     message.content = message.content.replace(symbol, "");
-    onEvent(message, client, player);
+    onEvent(message);
   }
+  player.on("error", (error) => {
+    message.channel.send({
+      embeds: [
+        embedTitleWithDescription(`Deu esse erro: ${JSON.stringify(error)}`),
+      ],
+    });
+  });
 });
 
-export { client, symbol };
+export { client, symbol, player };
