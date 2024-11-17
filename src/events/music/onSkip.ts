@@ -6,11 +6,14 @@ export async function skip(
   message: OmitPartialGroupDMChannel<Message<boolean>>
 ) {
   if (!queue || !queue.currentTrack) {
-    message.reply("Nenhuma música está tocando no momento!");
+    await message.reply({
+      content: "Nenhuma música está tocando no momento!",
+      options: { ephemeral: true },
+    });
     return;
   }
 
   const skippedTrack = queue.currentTrack;
   queue.node.skip(); // Pula para a próxima música na fila
-  message.reply(` Música **${skippedTrack.title}** pulada!`);
+  await message.reply(` Música **${skippedTrack.title}** pulada!`);
 }

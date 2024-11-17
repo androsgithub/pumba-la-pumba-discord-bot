@@ -23,7 +23,7 @@ export async function play(
       nodeOptions: { volume: 100 },
     });
 
-    message.channel.send(`Tocando: **${video}**`);
+    await message.channel.send(`Tocando: **${video}**`);
   } catch (e: any) {
     console.error("erro ao tocar musica");
     console.error(e.message);

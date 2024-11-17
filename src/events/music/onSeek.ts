@@ -11,14 +11,17 @@ export async function seek(
   newTime: string
 ) {
   if (!queue || !queue.currentTrack) {
-    message.reply("Nenhuma música está tocando no momento!");
+    await message.reply({
+      content: "Nenhuma música está tocando no momento!",
+      options: { ephemeral: true },
+    });
     return;
   }
 
   const skippedTrack = queue.currentTrack;
   const oldTime = queue.node.estimatedPlaybackTime;
   queue.node.seek(transformTimeTextInMilliseconds(newTime));
-  message.reply(
+  await message.reply(
     `Foi de ${transformMillisecondsInTimeText(oldTime)} para **${newTime}**`
   );
 }
