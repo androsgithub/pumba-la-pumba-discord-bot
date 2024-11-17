@@ -29,8 +29,8 @@ export function selectMenuOption(
   value: string
 ) {
   return new StringSelectMenuOptionBuilder({
-    label: label.substring(0, 100),
-    description: description.substring(0, 50),
+    label: label.substring(0, 99),
+    description: description.substring(0, 24),
     value: value,
   }).toJSON();
 }
