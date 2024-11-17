@@ -58,6 +58,7 @@ export async function play(
         },
       ],
       { url: video.thumbnail },
+      video.url,
       message.author
     );
 

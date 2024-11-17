@@ -1,13 +1,10 @@
 import {
   APIEmbedAuthor,
   APIEmbedField,
-  APIEmbedThumbnail,
   EmbedAssetData,
   EmbedBuilder,
-  EmbedData,
   User,
 } from "discord.js";
-import { transformMillisecondsInTimeText } from "../utils/transform-time";
 
 export function songEmbed(
   title: string,
@@ -15,6 +12,7 @@ export function songEmbed(
   author: APIEmbedAuthor,
   fields: APIEmbedField[],
   thumbnail: EmbedAssetData,
+  url: string,
   user: User
 ) {
   return new EmbedBuilder({
@@ -23,6 +21,7 @@ export function songEmbed(
     author,
     thumbnail,
     fields,
+    url,
     footer: {
       text: `Pedido por ${user.username}`,
       icon_url: user.avatarURL({ size: 64 }) ?? "",
