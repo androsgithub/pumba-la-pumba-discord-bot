@@ -1,11 +1,13 @@
-import { QueryType } from "discord-player";
 import { ExtendedClient } from "./structs/extended-client";
 import { YoutubeiExtractor } from "discord-player-youtubei";
-const { Player } = require("discord-player");
+import { Player, useVolume } from "discord-player";
+import { onEvent } from "./events";
 
 const client = new ExtendedClient();
+const symbol = "--";
 
 client.start();
+
 const player = new Player(client);
 player.extractors.register(YoutubeiExtractor, {});
 player.extractors.loadDefault();
@@ -20,12 +22,10 @@ client.on("messageCreate", async (message) => {
 
   if (messageAuthorId == botId) return;
 
-  if (message.content.startsWith("pumbala")) {
-    const messages = message.content.split(" ");
-    await player.play(message.member?.voice.channelId, messages[1], {
-      searchEngine: QueryType.YOUTUBE,
-    });
+  if (message.content.startsWith(symbol)) {
+    message.content = message.content.replace(symbol, "");
+    onEvent(message, client, player);
   }
 });
 
-export { client };
+export { client, symbol };
