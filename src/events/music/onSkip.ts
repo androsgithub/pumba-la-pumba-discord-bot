@@ -1,5 +1,7 @@
-import { GuildQueue } from "discord-player";
+import { GuildQueue, useQueue } from "discord-player";
 import { Message, OmitPartialGroupDMChannel } from "discord.js";
+import { player } from "../..";
+import { embedTitleWithDescription } from "../../components/embed";
 
 export async function skip(
   queue: GuildQueue | null,
@@ -7,13 +9,19 @@ export async function skip(
 ) {
   if (!queue || !queue.currentTrack) {
     await message.reply({
-      content: "Nenhuma música está tocando no momento!",
-      options: { ephemeral: true },
+      embeds: [
+        embedTitleWithDescription("Nenhuma música está tocando no momento!"),
+      ],
     });
     return;
   }
 
   const skippedTrack = queue.currentTrack;
   queue.node.skip(); // Pula para a próxima música na fila
-  await message.reply(` Música **${skippedTrack.title}** pulada!`);
+
+  await message.reply({
+    embeds: [
+      embedTitleWithDescription(`Música **${skippedTrack.title}** pulada!`),
+    ],
+  });
 }
