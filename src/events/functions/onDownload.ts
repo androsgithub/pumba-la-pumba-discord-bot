@@ -14,6 +14,7 @@ export async function onDownload(
     embeds: [embedTitleWithDescription("Iniciando Download...")],
   });
   try {
+    msg.delete();
     await download(type as DownloadType, url, msg).then(async (video) => {
       if (!video)
         return await msg.edit({
@@ -21,7 +22,7 @@ export async function onDownload(
           embeds: [],
         });
 
-      await msg.edit({
+      await msg.channel.send({
         embeds: [embedTitleWithDescription("Video baixado com sucesso!")],
         files: [
           {
@@ -31,8 +32,9 @@ export async function onDownload(
         ],
       });
     });
-  } catch (err) {
-    console.log(err);
+  } catch (err: any) {
+    console.log("erroaqui", err);
+    console.log("erroaqui", err.message);
     await msg.edit("Falha ao baixar o vídeo.");
   }
 }
