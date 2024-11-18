@@ -20,28 +20,28 @@ export async function search(
   message: OmitPartialGroupDMChannel<Message<boolean>>
 ) {
   if (message.member?.voice.channelId) {
-    const query = args
-      .slice(1, args.length)
-      .toString()
-      .replaceAll(",", " ")
-      .trim();
-    const results = await player.search(query);
-
-    const r = await message.reply({
-      components: [
-        select(
-          selectMenu(
-            "searchedVideos",
-            "Selecione um video!",
-            results.tracks.map((track) =>
-              selectMenuOption(track.title, track.author, track.url)
-            )
-          )
-        ),
-      ],
-    });
-
     try {
+      const query = args
+        .slice(1, args.length)
+        .toString()
+        .replaceAll(",", " ")
+        .trim();
+      const results = await player.search(query);
+
+      const r = await message.reply({
+        components: [
+          select(
+            selectMenu(
+              "searchedVideos",
+              "Selecione um video!",
+              results.tracks.map((track) =>
+                selectMenuOption(track.title, track.author, track.url)
+              )
+            )
+          ),
+        ],
+      });
+
       const interaction = await message.channel.awaitMessageComponent({
         componentType: ComponentType.StringSelect,
         time: 30_000,
