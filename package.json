@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch --trace-uncaught src/index.ts ",
+    "dev": "tsx watch --trace-uncaught --trace-warnings src/index.ts ",
     "start": "tsx src/index.ts"
   },
   "keywords": [],
@@ -22,6 +22,7 @@
     "discord-player-youtubei": "^1.3.5",
     "discord.js": "^14.16.3",
     "dotenv": "^16.4.5",
+    "ffmpeg-static": "^5.2.0",
     "mediaplex": "^0.0.9",
     "pumba-la-pumba": "file:",
     "tsx": "^4.19.2",
