@@ -16,12 +16,5 @@ export async function skip(
     return;
   }
 
-  const skippedTrack = queue.currentTrack;
-  queue.node.skip(); // Pula para a próxima música na fila
-
-  await message.reply({
-    embeds: [
-      embedTitleWithDescription(`Música **${skippedTrack.title}** pulada!`),
-    ],
-  });
+  queue.node.skip();
 }
