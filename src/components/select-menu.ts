@@ -20,7 +20,7 @@ export function selectMenu(
   return new StringSelectMenuBuilder({
     custom_id,
     placeholder,
-    options: options.splice(0, 25),
+    options: options.splice(0, 24),
   }).toJSON();
 }
 export function selectMenuOption(
