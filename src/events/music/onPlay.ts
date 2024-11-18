@@ -1,7 +1,7 @@
-import { GuildQueue, Player, Track, useQueue } from "discord-player";
+import { GuildQueue, Track } from "discord-player";
 import { YoutubeiExtractor } from "discord-player-youtubei";
-import { EmbedBuilder, Message, OmitPartialGroupDMChannel } from "discord.js";
-import { validateURL, getInfo, videoInfo } from "ytdl-core";
+import { Message, OmitPartialGroupDMChannel } from "discord.js";
+import { validateURL, getInfo } from "ytdl-core";
 import { transformMillisecondsInTimeText } from "../../utils/transform-time";
 import { volume } from "../../../config.json";
 import { player } from "../..";
@@ -35,34 +35,11 @@ export async function play(
     }
 
     await player.play(voiceChannelId, video, {
-      nodeOptions: { volume },
+      nodeOptions: {
+        volume,
+        metadata: { channel: message.channel, author: message.author },
+      },
     });
-
-    const embed = songEmbed(
-      video.title,
-      video.description,
-      { name: video.author },
-      [
-        {
-          name: "Duração da musica",
-          value: transformMillisecondsInTimeText(video.durationMS),
-          inline: true,
-        },
-        {
-          name: "Duração da playlist",
-          value: transformMillisecondsInTimeText(
-            queue?.currentTrack?.durationMS
-              ? video.durationMS + queue.estimatedDuration
-              : video.durationMS
-          ),
-        },
-      ],
-      { url: video.thumbnail },
-      video.url,
-      message.author
-    );
-
-    await message.channel.send({ embeds: [embed] });
   } catch (e: any) {
     console.error("erro ao tocar musica");
     console.error(e);
