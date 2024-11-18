@@ -1,6 +1,6 @@
 import { Message, OmitPartialGroupDMChannel } from "discord.js";
 import { play } from "./music/onPlay";
-import { GuildQueue, useQueue } from "discord-player";
+import { GuildQueue } from "discord-player";
 import { skip } from "./music/onSkip";
 import { seek } from "./music/onSeek";
 import { search } from "./music/onSearch";
@@ -10,6 +10,8 @@ import { player } from "..";
 import { restart } from "./functions/onRestart";
 import { config } from "../utils/configs";
 import { setVolume } from "./configs/onSetVolume";
+import { shuffle } from "./music/onShuffle";
+import { togglePause } from "./music/onPause";
 
 export async function onEvent(
   message: OmitPartialGroupDMChannel<Message<boolean>>
@@ -27,6 +29,14 @@ export async function onEvent(
 
     case args[0] == "search":
       search(args, queue, message);
+      break;
+
+    case args[0] == "shuffle":
+      shuffle(queue, message);
+      break;
+
+    case args[0] == "pause":
+      togglePause(queue, message);
       break;
 
     case args[0] == "time":
