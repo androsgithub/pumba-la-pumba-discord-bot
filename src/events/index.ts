@@ -12,6 +12,7 @@ import { config } from "../utils/configs";
 import { setVolume } from "./configs/onSetVolume";
 import { shuffle } from "./music/onShuffle";
 import { togglePause } from "./music/onPause";
+import { onDownload } from "./functions/onDownload";
 
 export async function onEvent(
   message: OmitPartialGroupDMChannel<Message<boolean>>
@@ -22,9 +23,11 @@ export async function onEvent(
 
   switch (true) {
     //music
+    case args[0] == "download":
+      onDownload(args[1], args[2], message);
+      break;
     case args[0] == "play" || args[0] == "p":
-      const url = args[1];
-      play(url, queue, message);
+      play(args[1], queue, message);
       break;
 
     case args[0] == "search":
