@@ -29,10 +29,17 @@ export function songEmbed(
     timestamp: Date.now(),
   });
 }
-export function embedTitleWithDescription(title: string, description?: string) {
+export function embedTitleWithDescription(
+  title: string,
+  description?: string,
+  image?: EmbedAssetData,
+  url?: string
+) {
   return new EmbedBuilder({
     description,
     title,
+    thumbnail: image,
+    url,
     timestamp: Date.now(),
   });
 }
