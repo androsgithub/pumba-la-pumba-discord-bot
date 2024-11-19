@@ -31,10 +31,20 @@ export async function download(
             chunks.push(chunk);
             percent.complete += chunk.length;
             let p = Math.round((percent.complete / percent.total) * 100);
-
-            if ([1, 50, 100].includes(p)) {
-              await message.edit({
-                embeds: [embedTitleWithDescription(`${p}%`)],
+                if (
+                  (p > 0 && p < 2) ||
+                  (p > 24 && p < 26) ||
+                  (p > 49 && p < 51) ||
+                  (p > 74 && p < 76) ||
+                  (p > 95 && p < 101)
+                ) {
+                  await msg.edit({
+                    embeds: [embedTitleWithDescription(`Progresso: ${p}%`)],
+                  });
+                }
+                if (p > 100) {
+                  await msg.edit({
+                    embeds: [embedTitleWithDescription(`Enviando...`)],
               });
             }
           })
