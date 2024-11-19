@@ -23,7 +23,7 @@ export async function onEvent(
 
   switch (true) {
     //music
-    case args[0] == "download":
+    case args[0] == "download" || args[0] == "d":
       onDownload(args[1], args[2], message);
       break;
     case args[0] == "play" || args[0] == "p":
