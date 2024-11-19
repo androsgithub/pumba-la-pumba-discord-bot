@@ -15,7 +15,7 @@ export async function download(
 ) {
   return new Promise<{
     videoDetails: ytdl.MoreVideoDetails;
-    buffer: Buffer<ArrayBuffer>;
+    buffer: Buffer<ArrayBuffer> | null;
   } | null>(async (resolve, reject) => {
     if (ytdl.validateURL(url)) {
       let { videoDetails } = await ytdl.getInfo(url);
