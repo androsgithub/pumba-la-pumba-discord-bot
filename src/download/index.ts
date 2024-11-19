@@ -56,12 +56,13 @@ export async function download(
           });
       } else if (type == DownloadType.MP4) {
         if (!ffmpeg) return;
-        const video = ytdl(url, {
-          quality: "highestvideo",
-        });
-        const audio = ytdl(url, {
-          quality: "highestaudio",
-        });
+            const video = await downloadVideoBuffer(
+              videoInfo.videoDetails.video_url
+            );
+            const audio = await downloadAudioBuffer(
+              videoInfo.videoDetails.video_url
+            );
+            if (!video || !audio) throw new Error("video or audio not found");
 
         const ffmpegProcess = cp.spawn(
           ffmpeg,
