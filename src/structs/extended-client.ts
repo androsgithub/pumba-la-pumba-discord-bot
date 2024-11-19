@@ -5,8 +5,7 @@ import {
   IntentsBitField,
   Partials,
 } from "discord.js";
-import dotenv from "dotenv";
-dotenv.config();
+import { internal } from "../utils/configs";
 
 export class ExtendedClient extends Client {
   constructor() {
@@ -27,11 +26,11 @@ export class ExtendedClient extends Client {
     });
   }
   public start() {
-    let token: string = process.env.BOT_TOKEN;
+    let token: string = internal.BOT_TOKEN;
     if (!token) {
       console.error("No token provided");
       return;
     }
-    this.login(process.env.BOT_TOKEN);
+    this.login(internal.BOT_TOKEN);
   }
 }
