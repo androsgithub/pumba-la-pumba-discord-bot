@@ -6,6 +6,7 @@ import { Message, OmitPartialGroupDMChannel } from "discord.js";
 import { embedTitleWithDescription } from "../components/embed";
 import cp from "child_process";
 import ffmpeg from "ffmpeg-static";
+import { Readable } from "stream";
 
 export async function download(
   type: DownloadType,
@@ -102,5 +103,21 @@ export async function download(
           });
       }
     }
+  });
+}
+
+function downloadVideoBuffer(url: string) {
+  return new Promise<Readable>((resolve, reject) => {
+    resolve(ytdl(url));
+  });
+}
+function downloadAudioBuffer(url: string) {
+  return new Promise<Readable>(async (resolve, reject) => {
+    resolve(
+      ytdl(url, {
+        quality: "highestaudio",
+        filter: "audioonly",
+      })
+    );
   });
 }
