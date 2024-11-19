@@ -1,6 +1,6 @@
 import { ExtendedClient } from "./structs/extended-client";
 import { YoutubeiExtractor } from "discord-player-youtubei";
-import { Player, useVolume } from "discord-player";
+import { Player } from "discord-player";
 import { onEvent } from "./events";
 import { symbol } from "../config.json";
 import { embedTitleWithDescription, songEmbed } from "./components/embed";
