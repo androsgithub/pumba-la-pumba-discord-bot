@@ -98,11 +98,15 @@ export async function download(
         video.pipe(ffmpegProcess.stdio[3] as NodeJS.WritableStream);
         audio.pipe(ffmpegProcess.stdio[4] as NodeJS.WritableStream);
         ffmpegProcess.stdio[1]
-          .on("data", (chunk) => chunks.push(chunk))
-          .on("finish", () => {
-            const buffer = Buffer.concat(chunks);
-            resolve({ videoDetails, buffer });
-          });
+              .on("data", (chunk) => {
+                chunks.push(chunk);
+              })
+              .on("close", async () => {
+                resolve({ videoDetails, buffer: Buffer.concat(chunks) });
+              })
+              .on("error", function (err) {
+                reject(err);
+              });
       }
     }
   });
