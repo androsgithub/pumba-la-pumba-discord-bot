@@ -1,8 +1,13 @@
 import fs from "fs";
+import dotenv from "dotenv";
+dotenv.config();
 
 var config: { volume: number; symbol: string } = {
   volume: 100,
   symbol: "--",
+};
+var internal: { BOT_TOKEN: string } = {
+  BOT_TOKEN: process.env.BOT_TOKEN,
 };
 
 fs.readFile("config.json", function (err, data) {
@@ -17,4 +22,4 @@ export function reconfigure(changes: object) {
   });
 }
 
-export { config };
+export { config, internal };
