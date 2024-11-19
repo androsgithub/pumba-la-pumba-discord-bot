@@ -17,6 +17,7 @@ export async function download(
     videoDetails: ytdl.MoreVideoDetails;
     buffer: Buffer<ArrayBuffer> | null;
   } | null>(async (resolve, reject) => {
+    try {
     if (ytdl.validateURL(url)) {
       let { videoDetails } = await ytdl.getInfo(url);
       let percent = { complete: 0, total: 0 };
